@@ -32,7 +32,7 @@ jobs:
         pdflatex -interaction=nonstopmode -halt-on-error -output-directory=output main.tex
 
     - name: Clean up temporary files
-      run: rm output/*.aux output/*.bbl output/*.blg output/*.log output/*.out output/*.toc
+      run: rm output/*.aux output/*.bbl output/*.blg output/*.log output/*.out 
 
     - name: Upload PDF
       uses: actions/upload-artifact@v3
