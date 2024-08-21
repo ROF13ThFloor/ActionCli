@@ -1,10 +1,10 @@
-name: Compile LaTeX with Bibliography
+name: Compile LaTeX with Caching
 
 on:
   push:
     branches:
-      - main  # Trigger on push to the 'main' branch
-  pull_request:  # Trigger on pull request
+      - main
+  pull_request:
 
 jobs:
   build:
@@ -14,8 +14,25 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    - name: Install TeX Live
-      run: sudo apt-get update && sudo apt-get install -y texlive-full
+    - name: Set up cache directory
+      id: cache-setup
+      run: echo "::set-output name=cache-dir::/tmp/texlive"
+
+    - name: Cache TeX Live
+      uses: actions/cache@v3
+      with:
+        path: /tmp/texlive
+        key: ${{ runner.os }}-texlive-${{ hashFiles('**/*.tex', '**/*.bib') }}
+        restore-keys: |
+          ${{ runner.os }}-texlive-
+
+    - name: Install TeX Live if cache is missing
+      if: steps.cache-texlive.outputs.cache-hit != 'true'
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y texlive-full
+        mkdir -p /tmp/texlive
+        cp -r /usr/share/texlive/* /tmp/texlive
 
     - name: Create output directory
       run: mkdir -p output
@@ -39,3 +56,4 @@ jobs:
       with:
         name: compiled-pdf
         path: output/main.pdf
+
