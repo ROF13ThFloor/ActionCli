@@ -13,5 +13,7 @@ jobs:
     steps:
     - name: run pwd
       run : pwd
+    - name: pwd2 
+      run: pwd 
       
 
