@@ -11,49 +11,7 @@ jobs:
     runs-on: self-hosted
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
-
-    - name: Set up cache directory
-      id: cache-setup
-      run: echo "::set-output name=cache-dir::/tmp/texlive"
-
-    - name: Cache TeX Live
-      uses: actions/cache@v3
-      with:
-        path: /tmp/texlive
-        key: ${{ runner.os }}-texlive-${{ hashFiles('**/*.tex', '**/*.bib') }}
-        restore-keys: |
-          ${{ runner.os }}-texlive-
-
-    - name: Install TeX Live if cache is missing
-      if: steps.cache-texlive.outputs.cache-hit != 'true'
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y texlive-full
-        mkdir -p /tmp/texlive
-        cp -r /usr/share/texlive/* /tmp/texlive
-
-    - name: Create output directory
-      run: mkdir -p output
-
-    - name: Compile LaTeX (1st pass)
-      run: pdflatex -interaction=nonstopmode -halt-on-error -output-directory=output main.tex
-
-    - name: Compile Bibliography
-      run: bibtex output/main.aux  # Change to 'biber output/main' if using biber
-
-    - name: Compile LaTeX (2nd and 3rd pass)
-      run: |
-        pdflatex -interaction=nonstopmode -halt-on-error -output-directory=output main.tex
-        pdflatex -interaction=nonstopmode -halt-on-error -output-directory=output main.tex
-
-    - name: Clean up temporary files
-      run: rm output/*.aux output/*.bbl output/*.blg output/*.log output/*.out 
-
-    - name: Upload PDF
-      uses: actions/upload-artifact@v3
-      with:
-        name: compiled-pdf
-        path: output/main.pdf
+    - name: run ls 
+      run : ls 
+      
 
