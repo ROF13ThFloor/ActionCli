@@ -12,8 +12,14 @@ jobs:
 
     steps:
     - name: run pwd
-      run : pwd
+      run: pwd
     - name: pwd2 
       run: pwd 
+  run:
+    runs-on: self-hosted
+
+    steps:
+    - name: run ls 
+      run: ls
       
 
