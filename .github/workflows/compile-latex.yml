@@ -20,7 +20,10 @@ jobs:
 
     - name: Install TeX Live
       run: sudo apt-get update && sudo apt-get install -y texlive-full
-
+      
+    - name: Set up output directory
+      run: mkdir -p output && chmod -R u+w output
+      
     - name: Compile LaTeX (1st pass)
       run: pdflatex -interaction=nonstopmode -halt-on-error -output-directory=output main.tex
 
