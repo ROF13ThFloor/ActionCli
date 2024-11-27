@@ -1,46 +1,42 @@
-name: Test
+name: Compile LaTeX with Bibliography
+
 on:
-  pull_request:
-    branches:
-      - main
   push:
     branches:
-      - main # to update code coverage
+      - main  # Trigger on push to the 'main' branch
+  pull_request:  # Trigger on pull request
 
-permissions: # added using https://github.com/step-security/secure-workflows
-  contents: read
-concurrency:
-  group: ${{ github.workflow }}
 jobs:
-  test:
-    permissions:
-      checks: write
-      pull-requests: write
+  build:
     runs-on: ubuntu-latest
-    steps:
-      - name: Harden Runner
-        uses: step-security/harden-runner@5c7944e73c4c2a096b17a9cb74d65b6c2bbafbde # v2.9.1
-        with:
-          disable-sudo: true
-          egress-policy: audit
-          allowed-endpoints: >
-            api.github.com:443
-            codecov.io:443
-            github.com:443
-            registry.npmjs.org:443
-            storage.googleapis.com:443
-            uploader.codecov.io:443
 
-      - name: Checkout
-        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
-      - name: Install Dependencies
-        run: npm ci
-      - name: Run coverage
-        run: npm test -- --coverage
-      - uses: codecov/codecov-action@eaaf4bedf32dbdc6b720b63067d99c4d77d6047d # v3.1.4
-      - name: Publish Test Results
-        uses: step-security/publish-unit-test-result-action@v2
-        if: always()
-        with:
-          files: |
-            reports/*.xml
+    steps:
+    - name: Harden Runner
+      uses: step-security/harden-runner@5c7944e73c4c2a096b17a9cb74d65b6c2bbafbde
+      with: 
+        egress-policy: audit
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Install TeX Live
+      run: sudo apt-get update && sudo apt-get install -y texlive-full
+
+    - name: Compile LaTeX (1st pass)
+      run: pdflatex -interaction=nonstopmode -halt-on-error -output-directory=output main.tex
+
+    - name: Compile Bibliography
+      run: bibtex output/main.aux  # Change to 'biber output/main' if using biber
+
+    - name: Compile LaTeX (2nd and 3rd pass)
+      run: |
+        pdflatex -interaction=nonstopmode -halt-on-error -output-directory=output main.tex
+        pdflatex -interaction=nonstopmode -halt-on-error -output-directory=output main.tex
+
+    - name: Clean up temporary files
+      run: rm output/*.aux output/*.bbl output/*.blg output/*.log output/*.out output/*.toc
+
+    - name: Upload PDF
+      uses: actions/upload-artifact@v3
+      with:
+        name: compiled-pdf
+        path: output/main.pdf
