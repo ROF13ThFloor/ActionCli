@@ -24,3 +24,13 @@ jobs:
       uses: rof13thfloor/create-an-issue@main
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Creat a pull request
+      uses: peter-evans/create-pull-request@v7
+      with: 
+        token: ${{ secrets.GITHUB_TOKEN }}
+        branch: main
+        base: master
+        title: "This is the real pull request action"
+         
+
