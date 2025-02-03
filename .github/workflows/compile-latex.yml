@@ -3,37 +3,18 @@ name: Compile LaTeX with Bibliography
 on:
   push:
     branches:
-      - main  # Trigger on push to the 'main' branch
+      - main  
+      - master
   pull_request:  # Trigger on pull request
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    - name: Install TeX Live
-      run: sudo apt-get update && sudo apt-get install -y texlive-full
-
-    - name: Compile LaTeX (1st pass)
-      run: pdflatex -interaction=nonstopmode -halt-on-error -output-directory=output main.tex
-
-    - name: Compile Bibliography
-      run: bibtex output/main.aux  # Change to 'biber output/main' if using biber
-
-    - name: Compile LaTeX (2nd and 3rd pass)
-      run: |
-        pdflatex -interaction=nonstopmode -halt-on-error -output-directory=output main.tex
-        pdflatex -interaction=nonstopmode -halt-on-error -output-directory=output main.tex
-
-    - name: Clean up temporary files
-      run: rm output/*.aux output/*.bbl output/*.blg output/*.log output/*.out output/*.toc
-
-    - name: Upload PDF
-      uses: actions/upload-artifact@v3
-      with:
-        name: compiled-pdf
-        path: output/main.pdf
+    - name: echo step
+      run: echo "Hello from self-hosted runner"
 
