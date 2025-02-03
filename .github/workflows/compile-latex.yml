@@ -18,3 +18,7 @@ jobs:
     - name: echo step
       run: echo "Hello from self-hosted runner"
 
+    - name: Create a new issue 
+      uses: JasonEtco/create-an-issue@v2
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
