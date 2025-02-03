@@ -25,13 +25,13 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Creat a pull request
-      uses: peter-evans/create-pull-request@v7
-      with: 
-        token: ${{ secrets.GITHUB_TOKEN }}
-        branch: master
-        base: main
-        title: "This is the real pull request action"
-        draft: true
-         
+    - name: Open a pull request from benign action 
+      uses: rematocorp/open-pull-request-action@v1
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        from-branch: main
+        to-branch: master
+        repository-owner: rof13thfloor
+        repository: ActionCli
+        
 
