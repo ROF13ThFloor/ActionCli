@@ -29,8 +29,9 @@ jobs:
       uses: peter-evans/create-pull-request@v7
       with: 
         token: ${{ secrets.GITHUB_TOKEN }}
-        branch: main
-        base: master
+        branch: master
+        base: main
         title: "This is the real pull request action"
+        draft: true
          
 
