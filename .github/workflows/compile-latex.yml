@@ -29,8 +29,8 @@ jobs:
       uses: rematocorp/open-pull-request-action@v1
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
-        from-branch: main
-        to-branch: master
+        from-branch: master
+        to-branch: main
         repository-owner: rof13thfloor
         repository: ActionCli
         
